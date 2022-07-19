@@ -43,7 +43,10 @@ func main() {
 	}
 
 	c := cron.New(cron.WithLocation(loc))
-	c.AddFunc(cronString, twilioClient.SendMessage())
+	_, err = c.AddFunc(cronString, twilioClient.SendMessage())
+	if err != nil {
+		logger.Fatal("could not add cron job", zap.Error(err))
+	}
 	c.Start()
 
 	r := mux.NewRouter()
